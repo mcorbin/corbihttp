@@ -9,7 +9,7 @@
   (fn handler [request]
     (interceptor/execute {:request request} interceptor-chain)))
 
-(defrecord Server [config interceptor-chain server interceptor-handler]
+(defrecord Server [config interceptor-chain-builder main-handler server]
   component/Lifecycle
   (start [this]
     (let [ssl-context (when (:cacert config)
@@ -17,16 +17,17 @@
                                               (:cert config)
                                               (:cacert config)))
           config (cond-> {:join? false
-                            :host (:address config)}
-                     (not ssl-context) (assoc :port (:port config))
-                     ssl-context
-                     (assoc :ssl? true
-                            :http? false
-                            :ssl-port (:port config)
-                            :ssl-context ssl-context
-                            :client-auth :need))]
+                          :host (:address config)}
+                   (not ssl-context) (assoc :port (:port config))
+                   ssl-context
+                   (assoc :ssl? true
+                          :http? false
+                          :ssl-port (:port config)
+                          :ssl-context ssl-context
+                          :client-auth :need))]
       (assoc this :server
-             (jetty/run-jetty (interceptor-handler interceptor-chain)
+             (jetty/run-jetty (interceptor-handler
+                               (interceptor-chain-builder main-handler))
                               config))))
   (stop [this]
     (when server

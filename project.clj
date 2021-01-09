@@ -10,16 +10,20 @@
                  [com.stuartsierra/component "1.0.0"]
                  [commons-codec/commons-codec "1.15"]
                  [environ "1.2.0"]
-                 [exoscale/cloak "0.1.3"]
-                 [exoscale/ex "0.3.16"]
+                 [exoscale/cloak "0.1.6"]
+                 [exoscale/ex "0.3.17"]
                  [exoscale/interceptor "0.1.9"]
-                 [io.micrometer/micrometer-registry-prometheus "1.6.1"]
-                 [less-awful-ssl "1.0.6"]
+                 [io.micrometer/micrometer-registry-prometheus "1.6.2"]
                  [javax.xml.bind/jaxb-api "2.4.0-b180830.0359"]
+                 [less-awful-ssl "1.0.6"]
                  [org.clojure/clojure "1.10.1"]
                  [org.clojure/tools.logging "1.1.0"]
                  [ring/ring-core "1.8.2"]
                  [ring/ring-jetty-adapter "1.8.2"]
                  [spootnik/signal "0.2.4"]
                  [spootnik/unilog "0.7.27"]]
-  :repl-options {:init-ns corbihttp.core})
+  :repl-options {:init-ns corbihttp.core}
+  :profiles {:dev {:dependencies [[pjstadig/humane-test-output "0.10.0"]]
+                   :plugins [[lein-ancient "0.6.15"]]
+                   :injections [(require 'pjstadig.humane-test-output)
+                                (pjstadig.humane-test-output/activate!)]}})
