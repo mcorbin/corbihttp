@@ -14,6 +14,7 @@
                  [exoscale/ex "0.3.16"]
                  [exoscale/interceptor "0.1.9"]
                  [io.micrometer/micrometer-registry-prometheus "1.6.1"]
+                 [less-awful-ssl "1.0.6"]
                  [javax.xml.bind/jaxb-api "2.4.0-b180830.0359"]
                  [org.clojure/clojure "1.10.1"]
                  [org.clojure/tools.logging "1.1.0"]

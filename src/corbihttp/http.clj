@@ -1,6 +1,7 @@
 (ns corbihttp.http
   (:require [com.stuartsierra.component :as component]
             [exoscale.interceptor :as interceptor]
+            [less.awful.ssl :as less-ssl]
             [ring.adapter.jetty :as jetty]))
 
 (defn interceptor-handler
@@ -8,14 +9,25 @@
   (fn handler [request]
     (interceptor/execute {:request request} interceptor-chain)))
 
-(defrecord Server [config interceptor-chain server]
+(defrecord Server [config interceptor-chain server interceptor-handler]
   component/Lifecycle
   (start [this]
-    (assoc this :server
-           (jetty/run-jetty (interceptor-handler interceptor-chain)
-                            {:join? false
-                             :host (:host config)
-                             :port (:port config)})))
+    (let [ssl-context (when (:cacert config)
+                        (less-ssl/ssl-context (:key config)
+                                              (:cert config)
+                                              (:cacert config)))
+          config (cond-> {:join? false
+                            :host (:address config)}
+                     (not ssl-context) (assoc :port (:port config))
+                     ssl-context
+                     (assoc :ssl? true
+                            :http? false
+                            :ssl-port (:port config)
+                            :ssl-context ssl-context
+                            :client-auth :need))]
+      (assoc this :server
+             (jetty/run-jetty (interceptor-handler interceptor-chain)
+                              config))))
   (stop [this]
     (when server
       (.stop server))

@@ -4,9 +4,6 @@
             [clojure.string :as string]
             [exoscale.ex :as ex]))
 
-(def default-msg
-  "Internal error.")
-
 (def default-problem-map
   {})
 
@@ -128,6 +125,9 @@
                status)
     {:status status
      :body {:error message}}))
+
+(def default-msg
+  "Internal error.")
 
 (defn handle-unexpected-error
   [request ^Exception e]

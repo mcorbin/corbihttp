@@ -6,7 +6,7 @@
   [request e]
   (cond
     (ex/type? e ::ex/invalid-spec) (err/handle-spec-error request e)
-    (ex/type? e ::err/user-exposable) (err/handle-user-error request e)
+    (ex/type? e :corbi/user) (err/handle-user-error request e)
     :else (err/handle-unexpected-error request e)))
 
 (def error

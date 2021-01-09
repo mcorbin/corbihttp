@@ -24,5 +24,5 @@
                                (-> (bs/convert body String)
                                    (json/parse-string true))))
                   (catch Exception _
-                    (throw (ex/ex-incorrect "fail to convert the request body to json"))))
+                    (throw (ex/ex-incorrect "Fail to convert the request body to json"))))
                 ctx)))})
