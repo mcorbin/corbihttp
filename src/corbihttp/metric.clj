@@ -1,5 +1,4 @@
 (ns corbihttp.metric
-  (:require [com.stuartsierra.component :as component])
   (:import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
            io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
            io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
@@ -12,7 +11,8 @@
            io.micrometer.core.instrument.Metrics
            io.micrometer.core.instrument.Timer
            io.micrometer.prometheus.PrometheusConfig
-           io.micrometer.prometheus.PrometheusMeterRegistry))
+           io.micrometer.prometheus.PrometheusMeterRegistry
+           java.util.concurrent.TimeUnit))
 
 (defn ->tags
   "Converts a map of tags to an array of string"
@@ -43,6 +43,11 @@
                (.publishPercentiles (double-array [0.5 0.75 0.98 0.99]))
                (.tags (->tags tags)))
              registry))
+
+(defn record [^MeterRegistry registry n tags duration]
+  (when registry
+    (let [timer (get-timer! registry n tags)]
+      (.record timer duration TimeUnit/MILLISECONDS))))
 
 (defmacro with-time
   [^MeterRegistry registry n tags & body]
