@@ -25,4 +25,6 @@
 
 (defn req-ctx
   [request]
-  {:request-id (:id request)})
+  {:request-id (:id request)
+   :request-uri (:uri request)
+   :request-method (:request-method request)})

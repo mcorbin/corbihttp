@@ -89,8 +89,8 @@
   (when registry
     (increment! registry
                 :http.responses.total
-                ["uri" (str (:uri (:request ctx)))
+                {"uri" (str (:uri (:request ctx)))
                  "method"  (str (some-> (:request ctx)
                                         :request-method
                                         name))
-                 "status" (str (:status (:response ctx)))])))
+                 "status" (str (:status (:response ctx)))})))
