@@ -85,12 +85,12 @@
 
 (defn http-response
   "updates the http response counter"
-  [registry request status]
+  [registry ctx]
   (when registry
     (increment! registry
                 :http.responses.total
-                ["uri" (str (:uri request))
-                 "method"  (str (some-> request
+                ["uri" (str (:uri (:request ctx)))
+                 "method"  (str (some-> (:request ctx)
                                         :request-method
                                         name))
-                 "status" (str status)])))
+                 "status" (str (:status (:response ctx)))])))
