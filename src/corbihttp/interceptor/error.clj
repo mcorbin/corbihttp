@@ -20,9 +20,14 @@
   [registry]
   {:name ::last-error
    :error (fn [ctx e]
-            (metric/increment! registry
-                               :http.fatal.error.total
-                               {})
-            (log/error e "fatal error")
-            (assoc ctx :response {:status 500
-                                  :body {:error err/default-msg}}))})
+            (try
+              (metric/increment! registry
+                                 :http.fatal.error.total
+                                 {})
+              (log/error {} e "fatal error")
+              (assoc ctx :response {:status 500
+                                    :body {:error err/default-msg}})
+              (catch Exception e
+                (log/error {} e "fatal error in the last handler")
+                (assoc ctx :response {:status 500
+                                      :body {:error err/default-msg}}))))})
