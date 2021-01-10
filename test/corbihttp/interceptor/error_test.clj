@@ -15,8 +15,11 @@
     (is (= {:response {:status 500, :body {:error "Internal error."}}}
            (handler {} (ex/ex-incorrect "incorrect" {}))))
     (is (= {:response {:status 400, :body {:error "incorrect"}}}
-           (handler {} (ex/ex-info "incorrect" [:corbi/user
-                                                [::ex/incorrect]]))))
+           (handler {} (ex/ex-info "incorrect" [::incorrect [::ex/incorrect :corbi/user]]))))
+    (is (= {:response {:status 403, :body {:error "Forbidden"}}}
+           (handler {} (ex/ex-info "Forbidden" [:incorrect [::ex/forbidden :corbi/user]]))))
+    (is (= {:response {:status 500, :body {:error "Internal error."}}}
+           (handler {} (ex/ex-info "Forbidden" [::ex/forbidden]))))
     (is (= {:response {:status 400,
                        :body {:error "field id is missing, field name is missing"}}}
            (handler {} (try (ex/assert-spec-valid ::test {})
