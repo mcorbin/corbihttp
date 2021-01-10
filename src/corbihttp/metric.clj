@@ -87,10 +87,16 @@
   "updates the http response counter"
   [registry ctx]
   (when registry
-    (increment! registry
-                :http.responses.total
-                {"uri" (str (:uri (:request ctx)))
-                 "method"  (str (some-> (:request ctx)
-                                        :request-method
-                                        name))
-                 "status" (str (:status (:response ctx)))})))
+    (let [status (str (:status (:response ctx)))
+          uri (if (= "404" status)
+                "?"
+                (str (:uri (:request ctx))))
+          method (str (or (some-> (:request ctx)
+                                  :request-method
+                                  name)
+                          "null"))]
+      (increment! registry
+                  :http.responses.total
+                  {"uri" uri
+                   "method" method
+                   "status" status}))))

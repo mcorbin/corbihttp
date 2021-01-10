@@ -134,6 +134,5 @@
   (log/error (merge (log/req-ctx request)
                     (ex-data e))
              e "http error")
-  ;(metric/http-errors request 500)
   {:status 500
    :body {:error default-msg}})
