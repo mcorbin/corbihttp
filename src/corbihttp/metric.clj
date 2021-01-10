@@ -83,3 +83,14 @@
      :headers {"Content-Type" "text/plain"}
      :body (.getBytes (scrape registry))}))
 
+(defn http-response
+  "updates the http response counter"
+  [registry request status]
+  (when registry
+    (increment! registry
+                :http.responses.total
+                ["uri" (str (:uri request))
+                 "method"  (str (some-> request
+                                        :request-method
+                                        name))
+                 "status" (str status)])))
