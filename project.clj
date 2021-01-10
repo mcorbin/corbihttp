@@ -23,7 +23,8 @@
                  [spootnik/signal "0.2.4"]
                  [spootnik/unilog "0.7.27"]]
   :repl-options {:init-ns corbihttp.core}
-  :profiles {:dev {:dependencies [[pjstadig/humane-test-output "0.10.0"]]
+  :profiles {:dev {:dependencies [[exoscale/telex "0.1.1"]
+                                  [pjstadig/humane-test-output "0.10.0"]]
                    :plugins [[lein-ancient "0.6.15"]]
                    :injections [(require 'pjstadig.humane-test-output)
                                 (pjstadig.humane-test-output/activate!)]}})
