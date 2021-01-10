@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [com.stuartsierra.component :as component]
             [corbihttp.http :as http]
-            [exxoscale.telex :as c]))
+            [exoscale.telex :as c]))
 
 (defn handler
   [_]
