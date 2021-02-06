@@ -51,7 +51,7 @@
 
 (defmacro with-time
   [^MeterRegistry registry n tags & body]
-  `(when ~registry
+  `(if ~registry
      (let [timer# (get-timer! ~registry ~n ~tags)
            current# (java.time.Instant/now)]
        (try
