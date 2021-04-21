@@ -1,4 +1,4 @@
-(defproject mcorbin/corbihttp "0.10.0"
+(defproject mcorbin/corbihttp "0.11.0"
   :description "Shared namespaces for my http projects"
   :url "https://github.com/mcorbin/corbihttp"
   :license {:name "EPL-2.0"
@@ -23,6 +23,7 @@
                  [spootnik/signal "0.2.4"]
                  [spootnik/unilog "0.7.27"]]
   :repl-options {:init-ns corbihttp.core}
+  :global-vars {*warn-on-reflection* true}
   :profiles {:dev {:dependencies [[exoscale/telex "0.1.1"]
                                   [pjstadig/humane-test-output "0.10.0"]]
                    :plugins [[lein-ancient "0.6.15"]]

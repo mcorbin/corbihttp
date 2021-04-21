@@ -8,8 +8,10 @@
            io.micrometer.core.instrument.binder.system.ProcessorMetrics
            io.micrometer.core.instrument.Counter
            io.micrometer.core.instrument.MeterRegistry
+           io.micrometer.core.instrument.MeterRegistry$Config
            io.micrometer.core.instrument.Metrics
            io.micrometer.core.instrument.Timer
+           io.micrometer.core.instrument.Timer$Builder
            io.micrometer.prometheus.PrometheusConfig
            io.micrometer.prometheus.PrometheusMeterRegistry
            java.util.concurrent.TimeUnit))
@@ -24,8 +26,10 @@
 
 (defn registry-component
   [tags]
-  (let [registry (PrometheusMeterRegistry. PrometheusConfig/DEFAULT)]
-    (.commonTags (.config registry) (->tags tags))
+  (let [^PrometheusMeterRegistry registry (PrometheusMeterRegistry. PrometheusConfig/DEFAULT)]
+    (.commonTags ^MeterRegistry$Config
+                 (.config registry)
+                 ^"[Ljava.lang.String;" (->tags tags))
     (Metrics/addRegistry registry)
     (.bindTo (ClassLoaderMetrics.) registry)
     (.bindTo (JvmGcMetrics.) registry)
@@ -39,20 +43,20 @@
 (defn get-timer!
   "get a timer by name and tags"
   [^MeterRegistry registry n tags]
-  (.register (doto (Timer/builder (name n))
-               (.publishPercentiles (double-array [0.5 0.75 0.98 0.99]))
-               (.tags (->tags tags)))
+  (.register ^Timer$Builder (doto (Timer/builder (name n))
+                             (.publishPercentiles (double-array [0.5 0.75 0.98 0.99]))
+                             (.tags ^"[Ljava.lang.String;" (->tags tags)))
              registry))
 
 (defn record [^MeterRegistry registry n tags duration]
   (when registry
     (let [timer (get-timer! registry n tags)]
-      (.record timer duration TimeUnit/MILLISECONDS))))
+      (.record ^Timer timer duration TimeUnit/MILLISECONDS))))
 
 (defmacro with-time
   [^MeterRegistry registry n tags & body]
   `(if ~registry
-     (let [timer# (get-timer! ~registry ~n ~tags)
+     (let [^Timer timer# (get-timer! ~registry ~n ~tags)
            current# (java.time.Instant/now)]
        (try
          (do ~@body)
@@ -68,7 +72,7 @@
   ([^MeterRegistry registry counter tags n]
    (when registry
      (let [builder (doto (Counter/builder (name counter))
-                     (.tags (->tags tags)))
+                     (.tags ^"[Ljava.lang.String;" (->tags tags)))
            counter (.register builder registry)]
        (.increment counter n)))))
 
@@ -81,7 +85,7 @@
     [_]
     {:status 200
      :headers {"Content-Type" "text/plain"}
-     :body (.getBytes (scrape registry))}))
+     :body (.getBytes ^String (scrape registry))}))
 
 (defn http-response
   "updates the http response counter"
