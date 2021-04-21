@@ -8,4 +8,5 @@
        (assoc-in ctx
                  [:request :all-params]
                  (merge (:body request)
+                        (:route-params request)
                         (:params request)))))})
