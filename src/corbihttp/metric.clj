@@ -7,6 +7,7 @@
            io.micrometer.core.instrument.binder.system.UptimeMetrics
            io.micrometer.core.instrument.binder.system.ProcessorMetrics
            io.micrometer.core.instrument.Counter
+           io.micrometer.core.instrument.Gauge
            io.micrometer.core.instrument.MeterRegistry
            io.micrometer.core.instrument.MeterRegistry$Config
            io.micrometer.core.instrument.Metrics
@@ -14,7 +15,8 @@
            io.micrometer.core.instrument.Timer$Builder
            io.micrometer.prometheus.PrometheusConfig
            io.micrometer.prometheus.PrometheusMeterRegistry
-           java.util.concurrent.TimeUnit))
+           java.util.concurrent.TimeUnit)
+  (:import java.util.function.Supplier))
 
 (defn ->tags
   "Converts a map of tags to an array of string"
@@ -75,6 +77,20 @@
                      (.tags ^"[Ljava.lang.String;" (->tags tags)))
            counter (.register builder registry)]
        (.increment counter n)))))
+
+(defn ^Supplier gauge-fn [producer-fn]
+  (reify Supplier
+    (get [this]
+      (producer-fn))))
+
+(defn gauge!
+  [^MeterRegistry registry gauge tags producer-fn]
+  (when registry
+    (doto (Gauge/builder (name gauge) (gauge-fn producer-fn))
+      (.strongReference true)
+      (.tags ^"[Ljava.lang.String;" (->tags tags))
+      (.register registry)))
+  )
 
 (defn scrape [^PrometheusMeterRegistry registry]
   (some-> registry .scrape))
