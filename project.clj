@@ -1,4 +1,4 @@
-(defproject mcorbin/corbihttp "0.13.0"
+(defproject mcorbin/corbihttp "0.14.0"
   :description "Shared namespaces for my http projects"
   :url "https://github.com/mcorbin/corbihttp"
   :license {:name "EPL-2.0"
@@ -11,6 +11,7 @@
                  [commons-codec/commons-codec "1.15"]
                  [environ "1.2.0"]
                  [exoscale/cloak "0.1.6"]
+                 [exoscale/coax "1.0.0-alpha12"]
                  [exoscale/ex "0.3.17"]
                  [exoscale/interceptor "0.1.9"]
                  [io.micrometer/micrometer-registry-prometheus "1.6.2"]
