@@ -13,6 +13,16 @@
   `(context/with-context~ data
     (log/infof ~@args)))
 
+(defmacro warn
+  [data & args]
+  `(context/with-context~ data
+     (log/warn ~@args)))
+
+(defmacro warnf
+  [data & args]
+  `(context/with-context~ data
+    (log/warnf ~@args)))
+
 (defmacro debug
   [data & args]
   `(context/with-context~ data
