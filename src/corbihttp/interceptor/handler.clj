@@ -24,12 +24,13 @@
 
 (defn main-handler-enter
   [{:keys [request] :as ctx} registry dispatch-map handler-component not-found-handler router]
-  (let [request (bidi/match-route* router
+  (let [uri (str (:uri request))
+        method (-> request :request-method name)
+        request (bidi/match-route* router
                                    (:uri request)
                                    request)
-        req-handler (:handler request)
-        uri (str (:uri request))
-        method (-> request :request-method name)]
+        req-handler (:handler request)]
+    ;; request is nil of no match
     (if-let [{:keys [handler-fn spec]} (get dispatch-map req-handler)]
       (metric/with-time
         registry
@@ -46,7 +47,7 @@
       (do (log/warnf {}
                      "uri %s not found for method %s"
                      uri method)
-          (assoc ctx :response (not-found-handler handler-component))))))
+          (assoc ctx :response (not-found-handler handler-component request))))))
 
 (defn main-handler
   "This interceptor expects that the handler is in the :handler key"
