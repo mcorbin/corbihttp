@@ -1,4 +1,4 @@
-(defproject mcorbin/corbihttp "0.14.0"
+(defproject mcorbin/corbihttp "0.15.0-SNAPSHOT"
   :description "Shared namespaces for my http projects"
   :url "https://github.com/mcorbin/corbihttp"
   :license {:name "EPL-2.0"
