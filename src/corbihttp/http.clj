@@ -1,9 +1,15 @@
 (ns corbihttp.http
   (:require [com.stuartsierra.component :as component]
+            [exoscale.interceptor :as interceptor]
             [less.awful.ssl :as less-ssl]
             [ring.adapter.jetty :as jetty]))
 
-(defrecord Server [config handler server]
+(defn handle!
+  [chain]
+  (fn [request]
+    (interceptor/execute {:request request} chain)))
+
+(defrecord Server [config chain-builder server chain]
   component/Lifecycle
   (start [this]
     (let [ssl-context (when (:cacert config)
@@ -18,11 +24,13 @@
                           :http? false
                           :ssl-port (:port config)
                           :ssl-context ssl-context
-                          :client-auth :need))]
-      (assoc this :server
-             (jetty/run-jetty handler
-                              config))))
+                          :client-auth :need))
+          chain (chain-builder this)]
+      (assoc this
+             :server (jetty/run-jetty (handle! chain)
+                                      config)
+             :chain chain)))
   (stop [this]
     (when server
       (.stop server))
-    (assoc this :server nil)))
+    (assoc this :server nil :chain nil)))

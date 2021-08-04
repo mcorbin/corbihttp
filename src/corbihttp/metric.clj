@@ -95,13 +95,17 @@
 (defn scrape [^PrometheusMeterRegistry registry]
   (some-> registry .scrape))
 
-(defn prom-handler
+(defn prom-interceptor
   [registry]
-  (fn handler
-    [_]
-    {:status 200
-     :headers {"Content-Type" "text/plain"}
-     :body (.getBytes ^String (scrape registry))}))
+  {:name ::prometheus
+   :enter (fn [_]
+            {:status 200
+             :headers {"Content-Type" "text/plain"}
+             :body (.getBytes ^String (scrape registry))})})
+
+(defn prom-chain-builder
+  [{:keys [registry]}]
+  [(prom-interceptor registry)])
 
 (defn http-response
   "updates the http response counter"
