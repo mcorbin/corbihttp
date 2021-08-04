@@ -27,51 +27,49 @@
 
 (deftest main-handler-test
   (let [state (atom [])
-        h (:enter (handler/main-handler nil
-                                        (dispatch-map (handler-fn-builder state))
-                                        nil
-                                        (fn [_] {:status 404})))]
+        h (:enter (handler/main-handler {:registry nil
+                                         :dispatch-map (dispatch-map (handler-fn-builder state))
+                                         :handler-component nil
+                                         :not-found-handler (fn [_ _] {:status 404})}))]
     (testing "get user"
       (is (= {:ok true}
-             (:response (h {:request {:request-method :get
+             (:response (h {:handler :user/get
+                            :request {:request-method :get
+                                      :route-params {:name "foo"}
                                       :uri "/api/v1/user/foo"}}))))
       (is (=  {:request-method :get
                :uri "/api/v1/user/foo"
                :route-params {:name "foo"}
-               :all-params {:name :foo}
-               :handler :user/get}
+               :all-params {:name :foo}}
               (-> @state last))))
     (testing "create user"
       (is (= {:ok true}
-             (:response (h {:request {:request-method :post
+             (:response (h {:handler :user/create
+                            :request {:request-method :post
+                                      :route-params {:name "foo"}
                                       :uri "/api/v1/user/foo"}}))))
       (is (=  {:request-method :post
                :uri "/api/v1/user/foo"
                :route-params {:name "foo"}
-               :all-params {:name "foo"}
-               :handler :user/create}
+               :all-params {:name "foo"}}
               (-> @state last))))
     (testing "create another user"
       (is (= {:ok true}
              (:response (h {:request {:request-method :post
-                                      :uri "/api/v1/user/foo-bar"}}))))
+                                      :route-params {:name "foo-bar"}
+                                      :uri "/api/v1/user/foo-bar"}
+                            :handler :user/create}))))
       (is (=  {:request-method :post
                :uri "/api/v1/user/foo-bar"
                :route-params {:name "foo-bar"}
-               :all-params {:name "foo-bar"}
-               :handler :user/create}
+               :all-params {:name "foo-bar"}}
               (-> @state last))))
     (testing "healthz"
       (is (= {:ok true}
-             (:response (h {:request {:request-method :get
+             (:response (h {:handler :system/healthz
+                            :request {:request-method :get
                                       :uri "/healthz"}}))))
       (is (=  {:request-method :get
                :uri "/healthz"
-               :all-params {}
-               :route-params {}
-               :handler :system/healthz}
-              (-> @state last))))
-    (testing "not found"
-      (is (= {:status 404}
-             (:response (h {:request {:request-method :post
-                                      :uri "/abc"}})))))))
+               :all-params {}}
+              (-> @state last))))))
