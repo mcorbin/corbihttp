@@ -17,7 +17,7 @@
 
 (defn route!
   [{:keys [request] :as ctx}
-   {:keys [dispatch-map registry router not-found-handler]}]
+   {:keys [dispatch-map registry router handler-component not-found-handler]}]
   (let [uri (str (:uri request))
         method (-> request :request-method name)
         request (bidi/match-route* router
@@ -26,17 +26,19 @@
         req-handler (:handler request)]
     (if (get dispatch-map req-handler)
       (assoc ctx
-             :start-time (java.time.Instant/now)
+             :start-time (when registry
+                           (java.time.Instant/now))
              :handler req-handler
-             :timer (metric/get-timer! registry
-                                       :http.request.duration
-                                       {"uri" uri
-                                        "method"  method}))
+             :timer (when registry
+                      (metric/get-timer! registry
+                                         :http.request.duration
+                                         {"uri" uri
+                                          "method"  method})))
       (do (log/warnf {}
                      "uri %s not found for method %s"
                      uri method)
           (itc/halt (assoc ctx :response
-                           (not-found-handler request)))))))
+                           (not-found-handler handler-component request)))))))
 
 (defn route
   "This set the :handler request value based on the request and the dispatch map."

@@ -25,10 +25,8 @@
 
 (defn main-handler
   "This interceptor expects that the handler is in the :handler key."
-  [{:keys [extra-handler] :as params}]
-  (let [extra-handler (or extra-handler identity)]
-    {:name ::main-handler
-     :enter (fn [ctx]
-              (main-handler-enter ctx
-                                  (assoc params
-                                         :extra-handler extra-handler)))}))
+  [params]
+  {:name ::main-handler
+   :enter (fn [ctx]
+            (main-handler-enter ctx
+                                params))})
