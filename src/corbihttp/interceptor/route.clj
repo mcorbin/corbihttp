@@ -26,6 +26,7 @@
         req-handler (:handler request)]
     (if (get dispatch-map req-handler)
       (assoc ctx
+             :request request
              :start-time (when registry
                            (java.time.Instant/now))
              :handler req-handler

@@ -3,4 +3,4 @@
 (def request-id
   {:name ::request-id
    :enter (fn [ctx]
-            (update-in ctx [:request :id] (fn [_] (java.util.UUID/randomUUID))))})
+            (assoc-in ctx [:request :id] (java.util.UUID/randomUUID)))})
