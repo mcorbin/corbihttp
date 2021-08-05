@@ -2,6 +2,7 @@
   (:require [bidi.bidi :as bidi]
             [corbihttp.metric :as metric]
             [corbihttp.log :as log]
+            [exoscale.ex :as ex]
             [exoscale.interceptor :as itc])
   (:import io.micrometer.core.instrument.Timer))
 
@@ -38,8 +39,13 @@
       (do (log/warnf {}
                      "uri %s not found for method %s"
                      uri method)
-          (itc/halt (assoc ctx :response
-                           (not-found-handler handler-component request)))))))
+          ;; TODO: why terminate is not working ?
+          (comment
+            (itc/terminate (assoc ctx :response
+                                  (not-found-handler handler-component request))))
+          (throw (ex/ex-info (format "uri %s not found for method %s"
+                                     uri method)
+                             [::not-found [:corbi/user ::ex/not-found]]))))))
 
 (defn route
   "This set the :handler request value based on the request and the dispatch map."
