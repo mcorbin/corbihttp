@@ -1,3 +1,3 @@
 # corbihttp
 
-Some namespaces I wanted to share accross projects.
+My Clojure HTTP toolkit.
