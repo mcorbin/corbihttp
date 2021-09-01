@@ -12,11 +12,17 @@
                              "application/json"))
               ctx))})
 
+(defn json?
+  [request]
+  (= (-> request :headers (get "content-type"))
+     "application/json"))
+
 (def request-params
   {:name ::json-params
    :enter (fn [ctx]
             (let [request (:request ctx)]
-              (if (:body request)
+              (if (and (:body request)
+                       (json? request))
                 (try
                   (update-in ctx
                              [:request :body]
@@ -24,5 +30,6 @@
                                (-> (bs/convert body String)
                                    (json/parse-string true))))
                   (catch Exception _
-                    (throw (ex/ex-incorrect "Fail to convert the request body to json"))))
+                    (throw (ex/ex-info "Fail to convert the request body to json"
+                                       [::invalid-json [:corbi/user ::ex/incorrect]]))))
                 ctx)))})

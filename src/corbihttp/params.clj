@@ -1,9 +1,12 @@
-(ns corbihttp.params)
+(ns corbihttp.params
+  (:require [corbihttp.interceptor.json :as json]))
 
 (defn merge-params
   [request]
   (assoc request
          :all-params
-         (merge (:body request)
+         (merge (if (json/json? request)
+                  (:body request)
+                  {})
                 (:params request)
                 (:route-params request))))
