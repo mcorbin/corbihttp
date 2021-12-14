@@ -22,5 +22,5 @@
         client (c/client {:exoscale.telex.client/connect-timeout 2000})
         response @(c/request client {:method :get
                                      :url (str "http://127.0.0.1:" port)})]
-    (is (= (:ring1.response/status response) 200))
+    (is (= (:status response) 200))
     (component/stop server)))
