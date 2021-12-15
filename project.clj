@@ -18,12 +18,12 @@
                  [javax.xml.bind/jaxb-api "2.4.0-b180830.0359"]
                  [less-awful-ssl "1.0.6"]
                  [org.clojure/clojure "1.10.3"]
-                 [org.clojure/tools.logging "1.2.1"]
+                 [org.clojure/tools.logging "1.2.2"]
                  [spootnik/constance "0.5.4"]
                  [ring/ring-core "1.9.4"]
                  [ring/ring-jetty-adapter "1.9.4"]
                  [spootnik/signal "0.2.4"]
-                 [spootnik/unilog "0.7.28"]]
+                 [spootnik/unilog "0.7.29"]]
   :repl-options {:init-ns corbihttp.core}
   :global-vars {*warn-on-reflection* true}
   :profiles {:dev {:dependencies [[exoscale/telex "0.1.6"]
