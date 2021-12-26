@@ -1,4 +1,4 @@
-(defproject fr.mcorbin/corbihttp "0.20.0"
+(defproject fr.mcorbin/corbihttp "0.21.0"
   :description "Shared namespaces for my http projects"
   :url "https://github.com/mcorbin/corbihttp"
   :license {:name "EPL-2.0"
@@ -18,7 +18,7 @@
                  [javax.xml.bind/jaxb-api "2.4.0-b180830.0359"]
                  [less-awful-ssl "1.0.6"]
                  [org.clojure/clojure "1.10.3"]
-                 [org.clojure/tools.logging "1.2.2"]
+                 [org.clojure/tools.logging "1.2.3"]
                  [spootnik/constance "0.5.4"]
                  [ring/ring-core "1.9.4"]
                  [ring/ring-jetty-adapter "1.9.4"]
