@@ -15,7 +15,7 @@
         req-handler (get (:data match-result) method)]
     (if req-handler
       (assoc ctx
-             :request request
+             :request (assoc request :path-params (:path-params match-result))
              :start-time (when registry
                            (java.time.Instant/now))
              :handler req-handler

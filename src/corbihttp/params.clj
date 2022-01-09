@@ -9,4 +9,5 @@
                   (:body request)
                   {})
                 (:params request)
+                (:path-params request)
                 (:route-params request))))

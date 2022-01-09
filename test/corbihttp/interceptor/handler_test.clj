@@ -28,31 +28,28 @@
     (testing "get user"
       (is (= {:ok true}
              (:response (h (r {:request {:request-method :get
-                                         :route-params {:name "foo"}
                                          :uri "/api/v1/user/foo"}})))))
       (is (=  {:request-method :get
                :uri "/api/v1/user/foo"
-               :route-params {:name "foo"}
+               :path-params {:name "foo"}
                :all-params {:name :foo}}
               (-> @state last))))
     (testing "create user"
       (is (= {:ok true}
              (:response (h (r {:request {:request-method :post
-                                         :route-params {:name "foo"}
                                          :uri "/api/v1/user/foo"}})))))
       (is (=  {:request-method :post
                :uri "/api/v1/user/foo"
-               :route-params {:name "foo"}
+               :path-params {:name "foo"}
                :all-params {:name "foo"}}
               (-> @state last))))
     (testing "create another user"
       (is (= {:ok true}
              (:response (h (r {:request {:request-method :post
-                                         :route-params {:name "foo-bar"}
                                          :uri "/api/v1/user/foo-bar"}})))))
       (is (=  {:request-method :post
                :uri "/api/v1/user/foo-bar"
-               :route-params {:name "foo-bar"}
+               :path-params {:name "foo-bar"}
                :all-params {:name "foo-bar"}}
               (-> @state last))))
     (testing "healthz"
@@ -61,6 +58,7 @@
                                          :uri "/healthz"}})))))
       (is (=  {:request-method :get
                :uri "/healthz"
+               :path-params {}
                :all-params {}}
               (-> @state last))))
     (testing "path not found"
