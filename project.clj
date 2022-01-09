@@ -4,7 +4,6 @@
   :license {:name "EPL-2.0"
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[aero "1.1.6"]
-                 [bidi "2.1.6"]
                  [byte-streams "0.2.4"]
                  [cheshire "5.10.1"]
                  [com.stuartsierra/component "1.0.0"]
@@ -18,6 +17,7 @@
                  [io.micrometer/micrometer-registry-prometheus "1.8.1"]
                  [javax.xml.bind/jaxb-api "2.4.0-b180830.0359"]
                  [less-awful-ssl "1.0.6"]
+                 [metosin/reitit-core "0.5.15"]
                  [org.clojure/clojure "1.10.3"]
                  [org.clojure/tools.logging "1.2.3"]
                  [spootnik/constance "0.5.4"]

@@ -1,7 +1,8 @@
 (ns corbihttp.interceptor.handler-test
   (:require [clojure.test :refer :all]
             [clojure.spec.alpha :as s]
-            [corbihttp.interceptor.handler :as handler]))
+            [corbihttp.interceptor.handler :as handler]
+            [corbihttp.interceptor.route :as route]))
 
 (s/def ::name keyword?)
 (s/def ::get-user (s/keys :req-un [::name]))
@@ -12,31 +13,23 @@
     (swap! state conj params)
     {:ok true}))
 
-(defn dispatch-map
+(defn router
   [handler-fn]
-  {:user/get {:path [#"api/v1/user/" :name #"/?"]
-              :method :get
-              :spec ::get-user
-              :handler-fn handler-fn}
-   :user/create {:path [#"api/v1/user/" :name #"/?"]
-                 :method :post
-                 :handler-fn handler-fn}
-   :system/healthz {:path [#"healthz/?"]
-                    :method :get
-                    :handler-fn handler-fn}})
+  [["/api/v1/user/:name" {:get {:spec ::get-user
+                                :handler handler-fn}
+                          :post {:handler handler-fn}}]
+   ["/healthz" {:get {:handler handler-fn}}]])
 
 (deftest main-handler-test
   (let [state (atom [])
+        r (:enter (route/route {:router (router (handler-fn-builder state))}))
         h (:enter (handler/main-handler {:registry nil
-                                         :dispatch-map (dispatch-map (handler-fn-builder state))
-                                         :handler-component nil
-                                         :not-found-handler (fn [_ _] {:status 404})}))]
+                                         :handler-component nil}))]
     (testing "get user"
       (is (= {:ok true}
-             (:response (h {:handler :user/get
-                            :request {:request-method :get
-                                      :route-params {:name "foo"}
-                                      :uri "/api/v1/user/foo"}}))))
+             (:response (h (r {:request {:request-method :get
+                                         :route-params {:name "foo"}
+                                         :uri "/api/v1/user/foo"}})))))
       (is (=  {:request-method :get
                :uri "/api/v1/user/foo"
                :route-params {:name "foo"}
@@ -44,10 +37,9 @@
               (-> @state last))))
     (testing "create user"
       (is (= {:ok true}
-             (:response (h {:handler :user/create
-                            :request {:request-method :post
-                                      :route-params {:name "foo"}
-                                      :uri "/api/v1/user/foo"}}))))
+             (:response (h (r {:request {:request-method :post
+                                         :route-params {:name "foo"}
+                                         :uri "/api/v1/user/foo"}})))))
       (is (=  {:request-method :post
                :uri "/api/v1/user/foo"
                :route-params {:name "foo"}
@@ -55,10 +47,9 @@
               (-> @state last))))
     (testing "create another user"
       (is (= {:ok true}
-             (:response (h {:request {:request-method :post
-                                      :route-params {:name "foo-bar"}
-                                      :uri "/api/v1/user/foo-bar"}
-                            :handler :user/create}))))
+             (:response (h (r {:request {:request-method :post
+                                         :route-params {:name "foo-bar"}
+                                         :uri "/api/v1/user/foo-bar"}})))))
       (is (=  {:request-method :post
                :uri "/api/v1/user/foo-bar"
                :route-params {:name "foo-bar"}
@@ -66,10 +57,21 @@
               (-> @state last))))
     (testing "healthz"
       (is (= {:ok true}
-             (:response (h {:handler :system/healthz
-                            :request {:request-method :get
-                                      :uri "/healthz"}}))))
+             (:response (h (r {:request {:request-method :get
+                                         :uri "/healthz"}})))))
       (is (=  {:request-method :get
                :uri "/healthz"
                :all-params {}}
-              (-> @state last))))))
+              (-> @state last))))
+    (testing "path not found"
+      (is (thrown-with-msg?
+           Exception
+           #"not found"
+           (h (r {:request {:request-method :get
+                            :uri "/healthz/"}})))))
+    (testing "method not found"
+      (is (thrown-with-msg?
+           Exception
+           #"not found"
+           (h (r {:request {:request-method :post
+                            :uri "/healthz"}})))))))

@@ -11,16 +11,14 @@
 
 (defn main-handler-enter
   [{:keys [request] :as ctx}
-   {:keys [dispatch-map
-           handler-component]}]
-  (let [req-handler (:handler ctx)
-        {:keys [handler-fn spec]} (get dispatch-map req-handler)]
-    (->> (handler-fn handler-component
-                     (-> request
-                         params/merge-params
-                         (update :all-params
-                                 #(->> (c/coerce spec (or % {}))
-                                       (assert-spec-valid spec)))))
+   {:keys [handler-component]}]
+  (let [{:keys [handler spec]} (:handler ctx)]
+    (->> (handler handler-component
+                  (-> request
+                      params/merge-params
+                      (update :all-params
+                              #(->> (c/coerce spec (or % {}))
+                                    (assert-spec-valid spec)))))
          (assoc ctx :response))))
 
 (defn main-handler
