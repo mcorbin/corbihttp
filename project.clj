@@ -1,4 +1,4 @@
-(defproject fr.mcorbin/corbihttp "0.21.0"
+(defproject fr.mcorbin/corbihttp "0.22.0"
   :description "Shared namespaces for my http projects"
   :url "https://github.com/mcorbin/corbihttp"
   :license {:name "EPL-2.0"
@@ -9,6 +9,7 @@
                  [cheshire "5.10.1"]
                  [com.stuartsierra/component "1.0.0"]
                  [commons-codec/commons-codec "1.15"]
+                 [commons-validator/commons-validator "1.7"]
                  [environ "1.2.0"]
                  [exoscale/cloak "0.1.8"]
                  [exoscale/coax "1.0.0-alpha12"]
