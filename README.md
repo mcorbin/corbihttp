@@ -3,7 +3,7 @@
 Corbihttp is a set of components, functions and interceptors which help you creating full-featured HTTP applications in [Clojure](https://clojure.org/). It leverages battled tested liraries so:
 
 - [Aero](https://github.com/juxt/aero) for configuration
-- [Bidi](https://github.com/juxt/bidi) for routing
+- [Reitit](https://github.com/mesotin/reitit) for routing
 - [Cheshire](https://github.com/dakrone/cheshire) for JSON handling
 - [Component](https://github.com/stuartsierra/component) for state management
 - [Cloak](https://github.com/exoscale/cloak) for secrets
