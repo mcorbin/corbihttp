@@ -23,12 +23,12 @@
                       (metric/get-timer! registry
                                          :http.request.duration
                                          {"uri" uri
-                                          "method"  method})))
+                                          "method" (name method)})))
       (do (log/warnf {}
                      "uri %s not found for method %s"
                      uri method)
           (throw (ex/ex-info (format "uri %s not found for method %s"
-                                     uri method)
+                                     uri (name method))
                              [::not-found [:corbi/user ::ex/not-found]]))))))
 
 (defn route
