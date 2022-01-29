@@ -14,6 +14,7 @@
                  [exoscale/coax "1.0.0-alpha12"]
                  [exoscale/ex "0.3.18"]
                  [exoscale/interceptor "0.1.9"]
+                 [exoscale/specs "1.0.0-alpha13"]
                  [io.micrometer/micrometer-registry-prometheus "1.8.1"]
                  [javax.xml.bind/jaxb-api "2.4.0-b180830.0359"]
                  [less-awful-ssl "1.0.6"]
