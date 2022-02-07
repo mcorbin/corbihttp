@@ -7,6 +7,7 @@
            io.micrometer.core.instrument.binder.system.UptimeMetrics
            io.micrometer.core.instrument.binder.system.ProcessorMetrics
            io.micrometer.core.instrument.Counter
+           io.micrometer.core.instrument.Counter$Builder
            io.micrometer.core.instrument.Gauge
            io.micrometer.core.instrument.MeterRegistry
            io.micrometer.core.instrument.MeterRegistry$Config
@@ -66,6 +67,12 @@
            (let [end# (java.time.Instant/now)]
              (.record timer# (java.time.Duration/between current# end#))))))
      (do ~@body)))
+
+(defn get-counter!
+  [^MeterRegistry registry n tags]
+  (.register ^Counter$Builder (doto (Counter/builder (name n))
+                                (.tags ^"[Ljava.lang.String;" (->tags tags)))
+             registry))
 
 (defn increment!
   "increments a counter"
