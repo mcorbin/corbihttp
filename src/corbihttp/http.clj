@@ -4,7 +4,7 @@
             [corbihttp.spec :as spec]
             [exoscale.interceptor :as interceptor]
             [less.awful.ssl :as less-ssl]
-            [ring.adapter.jetty :as jetty]))
+            [ring.adapter.jetty9 :as jetty]))
 
 (s/def ::host ::spec/ne-string)
 (s/def ::port ::spec/port)
@@ -15,14 +15,21 @@
 (s/def ::username ::spec/ne-string)
 (s/def ::password ::spec/secret)
 (s/def ::basic-auth (s/keys :req-un [::username ::password]))
+(s/def ::h2? boolean?)
+(s/def ::h2c? boolean?)
 
 (s/def ::http (s/keys :req-un [::host ::port]
-                      :opt-un [::cacert ::cert ::key ::basic-auth]))
+                      :opt-un [::cacert ::cert ::key ::basic-auth ::h2? ::h2c?]))
 
 (defn handle!
   [chain]
   (fn [request]
     (interceptor/execute {:request request} chain)))
+
+(def default-config
+  {:h2? true
+   :join? false
+   :h2c? true})
 
 (defrecord Server [config chain-builder server chain]
   component/Lifecycle
@@ -31,8 +38,9 @@
                         (less-ssl/ssl-context (:key config)
                                               (:cert config)
                                               (:cacert config)))
-          config (cond-> {:join? false
-                          :host (:host config)}
+          base-config (merge default-config
+                             (select-keys config [:host :h2? :h2c?]))
+          config (cond-> base-config
                    (not ssl-context) (assoc :port (:port config))
                    ssl-context
                    (assoc :ssl? true

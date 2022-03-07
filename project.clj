@@ -23,7 +23,7 @@
                  [org.clojure/tools.logging "1.2.4"]
                  [spootnik/constance "0.5.4"]
                  [ring/ring-core "1.9.5"]
-                 [ring/ring-jetty-adapter "1.9.5"]
+                 [info.sunng/ring-jetty9-adapter "0.17.5"]
                  [spootnik/signal "0.2.4"]
                  [spootnik/unilog "0.7.29"]]
   :repl-options {:init-ns corbihttp.core}
