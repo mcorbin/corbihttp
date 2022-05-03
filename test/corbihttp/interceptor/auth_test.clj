@@ -5,8 +5,9 @@
 
 (deftest basic-auth-test
   (let [basic-auth-fn (:enter (auth/basic-auth {:username "Aladdin"
+                                                :realm "mirabelle"
                                                 :password "open sesame"}))]
-    (are [auth-string] (= (merge auth/forbidden-response
+    (are [auth-string] (= (merge (auth/forbidden-response "mirabelle")
                                  {:exoscale.interceptor/queue nil
                                   :exoscale.interceptor/stack nil})
                           (basic-auth-fn
