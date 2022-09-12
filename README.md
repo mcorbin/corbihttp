@@ -1,6 +1,6 @@
 # Corbihttp: everything you need to build HTTP applications in Clojure
 
-Corbihttp is a set of components, functions and interceptors which help you creating full-featured HTTP applications in [Clojure](https://clojure.org/). It leverages battled tested liraries so:
+Corbihttp is a set of components, functions and interceptors which help you creating full-featured HTTP applications in [Clojure](https://clojure.org/). It leverages battled tested liraries:
 
 - [Aero](https://github.com/juxt/aero) for configuration
 - [Reitit](https://github.com/mesotin/reitit) for routing
