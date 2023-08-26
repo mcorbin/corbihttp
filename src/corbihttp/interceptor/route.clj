@@ -21,7 +21,7 @@
              :handler req-handler
              :timer (when registry
                       (metric/get-timer! registry
-                                         :http.request.duration
+                                         :http.requests.duration
                                          {"uri" uri
                                           "method" (name method)})))
       (do (log/warnf {}
