@@ -1,6 +1,7 @@
 (ns corbihttp.interceptor.ring
   (:require [ring.middleware.cookies :as cookies]
             [ring.middleware.params :as params]
+            [ring.middleware.proxy-headers :as proxy-headers]
             [ring.middleware.keyword-params :as keyword-params]))
 
 (def keyword-params
@@ -10,6 +11,10 @@
 (def params
   {:name ::params
    :enter (fn [ctx] (update ctx :request params/params-request))})
+
+(def forwarded-remote-addr
+  {:name ::forwarded-remote-addr
+   :enter (fn [ctx] (update ctx :request proxy-headers/forwarded-remote-addr-request))})
 
 (def cookies
   {:name ::cookies
