@@ -1,9 +1,7 @@
 (ns corbihttp.interceptor.json
   (:require [byte-streams :as bs]
             [cheshire.core :as json]
-            [exoscale.ex :as ex]
-;            [charred.api :as charred]
-            ))
+            [exoscale.ex :as ex]))
 
 (def json
   {:name ::json
@@ -30,9 +28,7 @@
                              [:request :body]
                              (fn [body]
                                (-> (bs/convert body String)
-                                   ;(charred/read-json :key-fn keyword)
-                                   (json/parse-string true)
-                                   )))
+                                   (json/parse-string true))))
                   (catch Exception _
                     (throw (ex/ex-info "Fail to convert the request body to json"
                                        [::invalid-json [:corbi/user ::ex/incorrect]]))))
