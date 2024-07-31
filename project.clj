@@ -26,7 +26,9 @@
                  [ring/ring-headers "0.4.0"]
                  [info.sunng/ring-jetty9-adapter "0.33.0"]
                  [spootnik/signal "0.2.5"]
-                 [spootnik/unilog "0.7.31"]]
+                 [spootnik/unilog "0.7.31"]
+;                 [com.cnuernber/charred "1.034"]
+                 ]
   :repl-options {:init-ns corbihttp.core}
   :global-vars {*warn-on-reflection* true}
   :profiles {:dev {:dependencies [[exoscale/telex "0.1.7"]

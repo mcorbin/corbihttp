@@ -25,8 +25,8 @@
                                          {"uri" uri
                                           "method" (name method)})))
       (do (log/warnf {}
-                     "uri %s not found for method %s"
-                     uri method)
+            "uri %s not found for method %s"
+            uri method)
           (throw (ex/ex-info (format "uri %s not found for method %s"
                                      uri (name method))
                              [::not-found [:corbi/user ::ex/not-found]]))))))
@@ -34,13 +34,14 @@
 (defn route
   "Computes the handler to use using the provided router"
   [{:keys [router] :as params}]
-  {:name ::main-handler
-   :enter (fn [ctx]
-            (route! ctx
-                    (assoc params :router (r/router router))))
-   :leave (fn [ctx]
-            (when-let [start-time (:start-time ctx)]
-              (let [end (java.time.Instant/now)]
-                (.record ^Timer (:timer ctx)
-                         (java.time.Duration/between start-time end)))
-              ctx))})
+  (let [final-router (r/router router)]
+    {:name ::main-handler
+     :enter (fn [ctx]
+              (route! ctx
+                      (assoc params :router final-router)))
+     :leave (fn [ctx]
+              (when-let [start-time (:start-time ctx)]
+                (let [end (java.time.Instant/now)]
+                  (.record ^Timer (:timer ctx)
+                           (java.time.Duration/between start-time end)))
+                ctx))}))
