@@ -14,8 +14,8 @@
            io.micrometer.core.instrument.Metrics
            io.micrometer.core.instrument.Timer
            io.micrometer.core.instrument.Timer$Builder
-           io.micrometer.prometheus.PrometheusConfig
-           io.micrometer.prometheus.PrometheusMeterRegistry
+           io.micrometer.prometheusmetrics.PrometheusConfig
+           io.micrometer.prometheusmetrics.PrometheusMeterRegistry
            java.util.concurrent.TimeUnit)
   (:import java.util.function.Supplier))
 
